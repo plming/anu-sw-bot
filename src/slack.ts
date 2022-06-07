@@ -2,7 +2,7 @@ import axios, { AxiosRequestHeaders } from "axios";
 
 async function postNotice(notice: {}) {
     const data = {
-        'text': 'Send from Node.js!!'
+        'text': JSON.stringify(notice)
     }
 
     const headers: AxiosRequestHeaders = {

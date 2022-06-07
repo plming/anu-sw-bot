@@ -19,7 +19,9 @@ async function main(): Promise<void> {
         // TODO DB 만들기
 
         // TODO 슬랙방에 메시지 전송
-
+        for (const project of supportProjects) {
+            postNotice(project);
+        }
         // TODO DB에 저장
 
 

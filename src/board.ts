@@ -67,6 +67,7 @@ async function getSupportProjects(): Promise<SupportProject[]> {
             toDate: toDate
         });
     }
+
     return result;
 }
 
