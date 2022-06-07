@@ -4,6 +4,7 @@ import * as cheerio from "cheerio";
 import assert from "assert";
 
 interface SupportProject {
+    id: number;
     title: string;
     fromDate: Date;
     toDate: Date;
@@ -26,14 +27,29 @@ async function getSupportProjects(): Promise<SupportProject[]> {
 
     const serviceList = $(".lc_li");
     for (const service of serviceList) {
-        const title = $(service).find('.lc_title').text().trim();
-        const sub = $(service).find('.lc_li_sub').text()
+        const titleNode = $(service).find('.lc_title');
+
+        let id: number;
+        {
+            let code = titleNode.attr('onclick');
+            assert(code !== undefined);
+
+            let result = /\d+/.exec(code);
+            assert(result !== null);
+
+            id = parseInt(result[0]);
+            assert(!isNaN(id));
+        }
+
+        const title = titleNode.text().trim();
+
+        const sub = $(service).find('.lc_li_sub').text();
         const dateRegex = /\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])/g;
 
         let fromDate: Date;
         {
             let result = dateRegex.exec(sub);
-            assert(result != null);
+            assert(result !== null);
             fromDate = new Date(result[0]);
         }
 
@@ -43,8 +59,13 @@ async function getSupportProjects(): Promise<SupportProject[]> {
             assert(result != null);
             toDate = new Date(result[0]);
         }
-
-        result.push({ title: title, fromDate: fromDate, toDate: toDate });
+        console.log(id, title, fromDate, toDate);
+        result.push({
+            id: id,
+            title: title,
+            fromDate: fromDate,
+            toDate: toDate
+        });
     }
     return result;
 }
