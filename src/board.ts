@@ -1,14 +1,9 @@
-import axios from "axios";
-import * as iconv from "iconv-lite";
-import * as cheerio from "cheerio";
 import assert from "assert";
+import axios from "axios";
+import * as cheerio from "cheerio";
+import * as iconv from "iconv-lite";
 
-interface SupportProject {
-    id: number;
-    title: string;
-    fromDate: Date;
-    toDate: Date;
-}
+import { SupportProject } from "./supportProject";
 
 async function getSupportProjects(): Promise<SupportProject[]> {
     const result: SupportProject[] = [];
@@ -25,9 +20,9 @@ async function getSupportProjects(): Promise<SupportProject[]> {
 
     const $ = cheerio.load(html);
 
-    const serviceList = $(".lc_li");
-    for (const service of serviceList) {
-        const titleNode = $(service).find('.lc_title');
+    const projectList = $(".lc_li");
+    for (const project of projectList) {
+        const titleNode = $(project).find('.lc_title');
 
         let id: number;
         {
@@ -43,7 +38,7 @@ async function getSupportProjects(): Promise<SupportProject[]> {
 
         const title = titleNode.text().trim();
 
-        const sub = $(service).find('.lc_li_sub').text();
+        const sub = $(project).find('.lc_li_sub').text();
         const dateRegex = /\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])/g;
 
         let fromDate: Date;
@@ -59,13 +54,18 @@ async function getSupportProjects(): Promise<SupportProject[]> {
             assert(result != null);
             toDate = new Date(result[0]);
         }
-        console.log(id, title, fromDate, toDate);
-        result.push({
-            id: id,
+
+        const url = `https://sw.anu.ac.kr/main/sw/jw/main/view.php?mid=/jw/jw_list_all&bznum=${id}`;
+
+        const appended: SupportProject = {
+            _id: id,
             title: title,
             fromDate: fromDate,
-            toDate: toDate
-        });
+            toDate: toDate,
+            url: url
+        }
+
+        result.push(appended);
     }
 
     return result;

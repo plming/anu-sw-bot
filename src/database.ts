@@ -5,13 +5,6 @@ import "dotenv/config";
 
 let supportProjects: Collection<SupportProject>;
 
-let mock: SupportProject = {
-    "id": 368,
-    "title": "신기술 견학(AI Cyber Security Summit 2022)-일정 변경",
-    "fromDate": new Date("2022-04-22T00:00:00.000Z"),
-    "toDate": new Date("2022-06-28T00:00:00.000Z")
-};
-
 (async () => {
     assert(process.env.MONGODB_URI !== undefined);
 
@@ -29,19 +22,10 @@ async function insertSupportProject(supportProject: SupportProject) {
     }
 }
 
-async function findSupportProject(id: number) {
-    let found = await supportProjects.findOne({ id: id });
-    if (found === null) {
-        return null;
-    }
-    else {
-        return {
-            id: found.id,
-            title: found.title,
-            fromDate: found.fromDate,
-            toDate: found.toDate
-        }
-    }
+async function findSupportProject(id: number): Promise<SupportProject | null> {
+    let found = await supportProjects.findOne({ _id: id });
+
+    return found;
 }
 
 export { insertSupportProject, findSupportProject };

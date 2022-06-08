@@ -1,7 +1,7 @@
-
 export interface SupportProject {
-    id: number;
+    _id: number;
     title: string;
     fromDate: Date;
     toDate: Date;
+    url: string;
 }
