@@ -37,7 +37,7 @@ gcloud app deploy cron.yaml
 ## 💻 데모
 <img width="50%" alt="slackbot demo" src="https://user-images.githubusercontent.com/8957536/174318945-e9ed98c4-4cbf-4737-8153-e8fa4dff93d4.png">
 
-[Slackbot 라이브 데모](https://join.slack.com/t/anu-sw-slackbot/shared_invite/zt-1a97t7g3n-o8cWFgwSHBDhqqHBFekYyQ)
+> [Slack 라이브 데모](https://join.slack.com/t/anu-sw-slackbot/shared_invite/zt-1a97t7g3n-o8cWFgwSHBDhqqHBFekYyQ)
 
 ## 📝 TODO
 * 슬랙 메시지 UI 개선
