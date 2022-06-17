@@ -1,16 +1,15 @@
-import 'dotenv/config'
+import 'dotenv/config';
+import express from 'express';
 
 import { getSupportProjects } from './board';
 import { postMessage } from "./slack";
 import { findSupportProject, insertSupportProject } from "./database";
 import logger from './logger';
 
-const MINUTE_IN_MS = 1000 * 60;
-const HOUR_IN_MS = 1000 * 60 * 60;
+const app = express();
+const PORT = process.env.PORT ?? 8080;
 
-setInterval(main, HOUR_IN_MS);
-
-async function main(): Promise<void> {
+app.get('/run', async (req, res) => {
     try {
         const supportProjectList = await getSupportProjects();
 
@@ -30,4 +29,10 @@ async function main(): Promise<void> {
     } catch (error) {
         logger.error(error);
     };
-}
+
+    res.status(200).send('Successfully request cron job');
+});
+
+app.listen(PORT, () => {
+    logger.info(`Server listening on port ${PORT}...`);
+})
