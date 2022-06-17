@@ -2,6 +2,7 @@ import assert from "assert";
 import axios, { AxiosRequestHeaders } from "axios";
 import "dotenv/config";
 
+import logger from "./logger";
 import { SupportProject } from "./supportProject";
 
 assert(process.env.SLACK_WEBHOOK_URL !== undefined);
@@ -48,6 +49,7 @@ async function postMessage(supportProject: SupportProject) {
     }
 
     await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
+    logger.info(`슬랙 봇에 "${supportProject.title}" 메시지 전송함`);
 }
 
 export { postMessage };

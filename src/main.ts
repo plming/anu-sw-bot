@@ -3,36 +3,31 @@ import 'dotenv/config'
 import { getSupportProjects } from './board';
 import { postMessage } from "./slack";
 import { findSupportProject, insertSupportProject } from "./database";
+import logger from './logger';
 
-// DEV: 시간을 1시간으로 변경
-const HOUR_IN_MS = 1000;
+const MINUTE_IN_MS = 1000 * 60;
+const HOUR_IN_MS = 1000 * 60 * 60;
 
-// DEV: setTimeout을 setInterval로 변경
-setTimeout(main, HOUR_IN_MS);
+setInterval(main, HOUR_IN_MS);
 
 async function main(): Promise<void> {
     try {
-        const supportProjects = await getSupportProjects();
+        const supportProjectList = await getSupportProjects();
 
-        for (const p of supportProjects) {
-            let found = await findSupportProject(p._id);
+        for (const project of supportProjectList) {
+            let found = await findSupportProject(project._id);
 
             if (found === null) {
-                // 새로 게시된 지원사업
-                postMessage(p);
-                insertSupportProject(p);
-
-                console.log('new project');
+                postMessage(project);
+                insertSupportProject(project);
             }
             else {
-                // 이전에 게시된 지원사업
-                // TODO p와 다르면 업데이트
-
-                console.log('already noticed');
+                // TODO: p와 다르면 업데이트
+                logger.info(`이미 알림한 지원사업입니다. ${project.title}`);
             }
         }
 
     } catch (error) {
-        console.error(error);
+        logger.error(error);
     };
 }
