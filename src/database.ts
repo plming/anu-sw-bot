@@ -1,20 +1,21 @@
 import assert from "assert";
 import { Collection, MongoClient } from "mongodb";
-import { SupportProject } from "./supportProject";
 import "dotenv/config";
 
-let supportProjects: Collection<SupportProject>;
+import { Business } from "./business";
 
-(async () => {
+let supportProjects: Collection<Business>;
+
+(() => {
     assert(process.env.MONGODB_URI !== undefined);
 
     const client = new MongoClient(process.env.MONGODB_URI);
     const database = client.db('AnuSw');
 
-    supportProjects = database.collection('supportProject');
+    supportProjects = database.collection('business');
 })();
 
-async function insertSupportProject(supportProject: SupportProject) {
+async function insertBusiness(supportProject: Business): Promise<void> {
     let result = await supportProjects.insertOne(supportProject);
 
     if (!result.acknowledged) {
@@ -22,10 +23,8 @@ async function insertSupportProject(supportProject: SupportProject) {
     }
 }
 
-async function findSupportProject(id: number): Promise<SupportProject | null> {
-    let found = await supportProjects.findOne({ _id: id });
-
-    return found;
+async function findBusiness(id: number): Promise<Business | null> {
+    return supportProjects.findOne({ _id: id });
 }
 
-export { insertSupportProject, findSupportProject };
+export { insertBusiness, findBusiness };

@@ -3,19 +3,19 @@ import axios, { AxiosRequestHeaders } from "axios";
 import "dotenv/config";
 import logger from "./logger";
 
-import { SupportProject } from "./supportProject";
+import { Business } from "./business";
 
 assert(process.env.SLACK_WEBHOOK_URL !== undefined);
 
-async function notifySupportProjectAdded(supportProject: SupportProject) {
+async function notifyBusinessAdded(business: Business) {
     const payload = {
-        text: supportProject.title,
+        text: business.title,
         blocks: [
             {
                 type: "header",
                 text: {
                     type: "plain_text",
-                    text: supportProject.title
+                    text: business.title
                 }
             },
             {
@@ -23,7 +23,7 @@ async function notifySupportProjectAdded(supportProject: SupportProject) {
                 fields: [
                     {
                         type: "mrkdwn",
-                        text: `*신청기한:*\n${supportProject.toDate.toLocaleDateString('ko-kr')}`
+                        text: `*신청기한:*\n${business.toDate.toLocaleDateString('ko-kr')}`
                     }
                 ]
             },
@@ -37,7 +37,7 @@ async function notifySupportProjectAdded(supportProject: SupportProject) {
                             text: "신청하기"
                         },
                         style: "primary",
-                        url: supportProject.url
+                        url: business.url
                     }
                 ]
             }
@@ -49,11 +49,8 @@ async function notifySupportProjectAdded(supportProject: SupportProject) {
     }
 
     await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
-    logger.info(`슬랙 봇에 "${supportProject.title}" 메시지 전송함`);
+    logger.info(`슬랙 봇에 신규 공지 - 지원사업: ${business.title}`);
 }
 
-async function notifySupportProjectModified(supportProject: SupportProject) {
 
-}
-
-export { notifySupportProjectAdded, notifySupportProjectModified };
+export { notifyBusinessAdded };
