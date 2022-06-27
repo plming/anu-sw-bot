@@ -1,70 +1,46 @@
-import assert from "assert";
+import assert from "node:assert";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
 import { Business } from "./business";
 
+async function loadDocument(url: string, params: any) {
+    const response = await axios.get(url, { params: params });
+    const document = cheerio.load(response.data);
+
+    return document;
+}
+
 async function getBusinesses(): Promise<Business[]> {
-    const response = await axios.get("https://sw.anu.ac.kr/main/sw/jw/main/list.php",
-        {
-            params: {
-                "mid": "/jw/jw_sc",
-                "search_bzstat": "S"
-            }
-        });
+    const parentPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/list.php", {
+        "search_bzstat": "S" // 접수중 상태인 지원사업만 조회 
+    });
 
-    const $ = cheerio.load(response.data);
+    const businessList: Business[] = [];
 
-    const businesses: Business[] = [];
-    const nodeList = $(".lc_li");
+    const nodeList = parentPage(".lc_title_M")
     for (const node of nodeList) {
-        const titleNode = $(node).find('.lc_title');
-        const subNode = $(node).find('.lc_li_sub').text();
-        const dateRegex = /\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])/g;
-
         let id: number;
         {
-            let code = titleNode.attr('onclick');
-            assert(code !== undefined);
+            const onClickText = node.attribs['onclick'];
+            // 예를 들어 javascript:goView('397'); 에서 397을 추출함
+            const regexResult = /\d+/.exec(onClickText);
+            assert(regexResult !== null);
 
-            let result = /\d+/.exec(code);
-            assert(result !== null);
-
-            id = parseInt(result[0]);
+            id = parseInt(regexResult[0]);
             assert(!isNaN(id));
         }
 
-        let title: string;
-        {
-            title = titleNode.text().trim();
-        }
+        // 개별 페이지에서 가져오기
+        const childPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/view.php", {
+            "bznum": id
+        });
 
-        let fromDate: Date;
-        {
-            let result = dateRegex.exec(subNode);
-            assert(result !== null);
-            fromDate = new Date(result[0]);
-        }
-
-        let toDate: Date;
-        {
-            let result = dateRegex.exec(subNode);
-            assert(result != null);
-            toDate = new Date(result[0]);
-        }
-
-        const appended: Business = {
-            _id: id,
-            title: title,
-            fromDate: fromDate,
-            toDate: toDate,
-            url: `https://sw.anu.ac.kr/main/sw/jw/main/view.php?mid=/jw/jw_list_all&bznum=${id}`,
-        }
-
-        businesses.push(appended);
+        const business = new Business(id, childPage);
+        businessList.push(business);
     }
 
-    return businesses;
+    return businessList;
 }
 
 export { getBusinesses };

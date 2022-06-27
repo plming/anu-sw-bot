@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { Collection, MongoClient } from "mongodb";
 import "dotenv/config";
 

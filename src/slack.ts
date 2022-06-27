@@ -23,7 +23,7 @@ async function notifyBusinessAdded(business: Business) {
                 fields: [
                     {
                         type: "mrkdwn",
-                        text: `*신청기한:*\n${business.toDate.toLocaleDateString('ko-kr')}`
+                        text: `*신청기한:*\n${business.applicationEndDate.toLocaleDateString('ko-kr')}`
                     }
                 ]
             },
