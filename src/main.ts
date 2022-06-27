@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 
-import { getBusinesses } from './board';
+import * as board from './board';
 import * as slack from "./slack";
 import * as db from "./database";
 import logger from './logger';
@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT ?? 8080;
 
 app.get('/run', async (req, res) => {
-    const businesses = await getBusinesses();
+    const businesses = await board.getBusinesses();
 
     for (const business of businesses) {
         let found = await db.findBusiness(business._id);

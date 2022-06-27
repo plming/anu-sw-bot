@@ -1,23 +1,19 @@
 import assert from "assert";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import * as iconv from "iconv-lite";
 
 import { Business } from "./business";
 
 async function getBusinesses(): Promise<Business[]> {
     const response = await axios.get("https://sw.anu.ac.kr/main/sw/jw/main/list.php",
         {
-            responseType: "arraybuffer",
             params: {
                 "mid": "/jw/jw_sc",
                 "search_bzstat": "S"
             }
         });
 
-    const html = iconv.decode(response.data, 'euc-kr');
-
-    const $ = cheerio.load(html);
+    const $ = cheerio.load(response.data);
 
     const businesses: Business[] = [];
     const nodeList = $(".lc_li");
