@@ -11,17 +11,16 @@
 * MongoDB - 게시판 크롤링 결과를 저장
 * Google Cloud Platform
   * App Engine - 앱 배포
-  * Cloud Scheduler - 지원사업 게시판의 변경사항을 주기적으로 확인
+  * Cloud Scheduler - 지원사업 게시판의 변경사항을 주기적으로 확인하는 cron 작업 처리
 
-## 🖥 설치
+## 🖥 배포
 ### 로컬 환경
 ```bash
 # 슬랙봇 서버 실행
 npm run start
-```
-> **Note**
-> 추가로 OS에서 cron 설정 필요
 
+# OS에서 /run에 GET 요청하도록 cron 작업 설정
+```
 ### Google Cloud Platform
 ```bash
 # Google Cloud SDK 초기화
@@ -30,8 +29,7 @@ gcloud init
 # App Engine에 배포
 gcloud app deploy
 
-# cron 작업 업로드
-gcloud app deploy cron.yaml
+# 이후 Cloud Scheduler애서 /run에 GET 요청하도록 cron 작업 설정
 ```
 
 ## 💻 데모
