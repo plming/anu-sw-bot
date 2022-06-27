@@ -1,5 +1,5 @@
 cron:
 - description: "지원사업 가져오기"
   url: /run
-  schedule: every 12 hours synchronized
+  schedule: every 1 hours synchronized
   
