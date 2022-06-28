@@ -38,6 +38,6 @@ gcloud app deploy
 > [Slack 라이브 데모](https://join.slack.com/t/anu-sw-slackbot/shared_invite/zt-1a97t7g3n-o8cWFgwSHBDhqqHBFekYyQ)
 
 ## 📝 TODO
-* 슬랙 메시지 UI 개선
-* Github Actions와 GCP 연동하여 지속적 배포(CD) 구현
-* 기존 지원사업 내용 변경시 추가로 알리는 기능 구현
+- [ ] 슬랙 메시지 UI 개선
+- [ ] 기존 지원사업 내용 변경시 추가로 알리는 기능 구현
+- [x] ~~Cloud Build를 사용하여 지속적 배포(CD) 구현~~
