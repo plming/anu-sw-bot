@@ -2,7 +2,7 @@ import assert from "node:assert";
 import { Collection, MongoClient } from "mongodb";
 import "dotenv/config";
 
-import { Business } from "./business";
+import Business from "./business";
 
 let supportProjects: Collection<Business>;
 

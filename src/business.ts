@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { CheerioAPI } from "cheerio";
 
-export class Business {
+export default class Business {
     readonly _id: number;
     readonly title: string;
     readonly bodyText: string;
@@ -18,7 +18,7 @@ export class Business {
         this._id = id;
 
         // 2. title 초기화
-        this.title = Business.findInTable('사업명', document);
+        this.title = Business.findInTable('사업명', document).trim();
 
         // 3. applicationStartDate. applicationEndDate 초기화
         // 신청기간은 '2022-06-17 ~ 2022-07-08'와 같은 형태임

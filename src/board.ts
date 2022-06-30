@@ -2,7 +2,8 @@ import assert from "node:assert";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import { Business } from "./business";
+import Business from "./business";
+import Notice from './notice';
 
 async function loadDocument(url: string, params: any) {
     const response = await axios.get(url, { params: params });
@@ -29,9 +30,7 @@ async function getBusinesses(): Promise<Business[]> {
         assert(!isNaN(id));
 
         // 개별 페이지에서 가져오기
-        const childPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/view.php", {
-            "bznum": id
-        });
+        const childPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/view.php", { "bznum": id });
 
         const business = new Business(id, childPage);
         businessList.push(business);
@@ -40,14 +39,10 @@ async function getBusinesses(): Promise<Business[]> {
     return businessList;
 }
 
-interface Notice {
-
-}
-
 async function getNotices() {
     const parentPage = await loadDocument('https://sw.anu.ac.kr/module/bbs/list.php', { 'mid': '/community/notice' });
 
-    const notices: Notice[] = [];
+    const noticeList: Notice[] = [];
     const nodeList = parentPage('.bbs_B_td_tr');
 
     for (const node of nodeList) {
@@ -59,10 +54,13 @@ async function getNotices() {
         const id = parseInt(splited[1]);
         assert(!isNaN(id));
 
-        console.log(id)
+        const childPage = await loadDocument("http://sw.anu.ac.kr/module/bbs/view.php", { 'rdno': id });
 
-        const childPage = await loadDocument("http://sw.anu.ac.kr/module/bbs/view.php", { 'mid': '/community/notice', 'rdno': id })
+        const notice = new Notice(id, childPage);
+        noticeList.push(notice);
     }
+
+    return noticeList;
 }
 
-export { getBusinesses };
+export { getBusinesses, getNotices };

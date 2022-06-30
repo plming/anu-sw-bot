@@ -3,7 +3,7 @@ import axios, { AxiosRequestHeaders } from "axios";
 import "dotenv/config";
 import logger from "./logger";
 
-import { Business } from "./business";
+import Business from "./business";
 
 assert(process.env.SLACK_WEBHOOK_URL !== undefined);
 
