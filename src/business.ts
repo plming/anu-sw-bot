@@ -9,7 +9,7 @@ export class Business {
     readonly applicationEndDate: Date;
     readonly department: string;
 
-    get url() {
+    get url(): string {
         return `https://sw.anu.ac.kr/main/sw/jw/main/view.php?mid=/jw/jw_list_all&bznum=${this._id}`;
     }
 
