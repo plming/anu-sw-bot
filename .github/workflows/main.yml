@@ -17,6 +17,14 @@ jobs:
     steps:
     - id: 'checkout'
       uses: 'actions/checkout@v2'
+    
+    - name: 'Generate .env file'
+      run: |
+        echo "SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL" >> .env
+        echo "MONGODB_URI=$MONGODB_URI >> .env"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
