@@ -9,7 +9,7 @@ import logger from './logger';
 const app = express();
 const PORT = process.env.PORT ?? 8080;
 
-app.get('/run', async (req, res) => {
+app.get('/run', async (_req, res) => {
     const businesses = await board.getBusinesses();
 
     for (const business of businesses) {

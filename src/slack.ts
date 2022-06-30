@@ -7,41 +7,45 @@ import { Business } from "./business";
 
 assert(process.env.SLACK_WEBHOOK_URL !== undefined);
 
+const MAX_BODY_PREVIEW_LENGTH = 200;
+
 async function notifyBusinessAdded(business: Business) {
     const payload = {
-        text: business.title,
-        blocks: [
+        "text": business.title,
+        "blocks": [
             {
-                type: "header",
-                text: {
-                    type: "plain_text",
-                    text: business.title
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": business.title
                 }
             },
             {
-                type: "section",
-                fields: [
-                    {
-                        type: "mrkdwn",
-                        text: `*신청기한:*\n${business.applicationEndDate.toLocaleDateString('ko-kr')}`
-                    }
-                ]
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": `*신청기한:* ${business.applicationEndDate.toLocaleDateString('ko-kr')}\n*지원부서:* ${business.department}`
+                },
+                "accessory": {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "신청하기"
+                    },
+                    "style": "primary",
+                    "action_id": "button-action",
+                    "url": business.url
+                }
             },
             {
-                type: "actions",
-                elements: [
-                    {
-                        type: "button",
-                        text: {
-                            type: "plain_text",
-                            text: "신청하기"
-                        },
-                        style: "primary",
-                        url: business.url
-                    }
-                ]
+                "type": "section",
+                "text": {
+                    "type": "plain_text",
+                    "text": business.bodyText.substring(0, MAX_BODY_PREVIEW_LENGTH),
+                }
             }
         ]
+
     }
 
     const headers: AxiosRequestHeaders = {
