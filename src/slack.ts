@@ -45,7 +45,6 @@ async function notifyBusinessAdded(business: Business) {
                 }
             }
         ]
-
     }
 
     const headers: AxiosRequestHeaders = {
@@ -55,6 +54,5 @@ async function notifyBusinessAdded(business: Business) {
     await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
     logger.info(`슬랙 봇에 신규 공지 - 지원사업: ${business.title}`);
 }
-
 
 export { notifyBusinessAdded };
