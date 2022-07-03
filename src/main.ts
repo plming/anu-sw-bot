@@ -11,7 +11,6 @@ const PORT = process.env.PORT ?? 8080;
 
 app.get('/run', async (_req, res) => {
     const businesses = await board.getBusinesses();
-
     for (const business of businesses) {
         let found = await db.findBusiness(business._id);
 
@@ -20,14 +19,13 @@ app.get('/run', async (_req, res) => {
             db.insertBusiness(business);
         }
         else {
-            // TODO: p와 다르면 업데이트
             logger.info(`이미 알림한 지원사업입니다. ${business.title}`);
         }
     }
 
-    res.status(200).send('Successfully request cron job');
+    res.status(200).send('게시판 크롤링 및 슬랙방 공지를 완료했습니다');
 });
 
 app.listen(PORT, () => {
-    logger.info(`Server listening on port ${PORT}...`);
+    logger.info(`서버가 ${PORT}번 포트에서 listen중입니다...`);
 })

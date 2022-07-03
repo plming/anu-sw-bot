@@ -1,5 +1,6 @@
 # ANU SW Slackbot
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Deploy to App Engine](https://github.com/plming/anu-sw-slackbot/actions/workflows/main.yml/badge.svg)](https://github.com/plming/anu-sw-slackbot/actions/workflows/main.yml)
 
 ## 📢 소개
 [안동대학교 SW융합교육원](https://sw.anu.ac.kr)내 새로운 지원사업이 게시돼도 놓치는 경우가 생겨 만든, 채널에 메시지를 전송하여 알려주는 슬랙 봇입니다.
