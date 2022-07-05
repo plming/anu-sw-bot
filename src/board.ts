@@ -17,13 +17,12 @@ async function getBusinesses(): Promise<Business[]> {
         "search_bzstat": "S" // 접수중 상태인 지원사업만 조회 
     });
 
-    const businessList: Business[] = [];
+    const businesses: Business[] = [];
 
     const nodeList = parentPage(".lc_title_M")
     for (const node of nodeList) {
-        const onClickText = node.attribs['onclick'];
-
         // 예를 들어 "javascript:goView('397')"; 에서 397을 추출함
+        const onClickText = node.attribs['onclick'];
         const splited = onClickText.split("\'");
 
         const id = parseInt(splited[1]);
@@ -31,12 +30,18 @@ async function getBusinesses(): Promise<Business[]> {
 
         // 개별 페이지에서 가져오기
         const childPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/view.php", { "bznum": id });
+        const title = childPage('.th1:contains("사업명")').next().text().trim();
+        const department = childPage('.th1:contains("담당부서")').next().text().trim();
+        const [start, end] = childPage('.th1:contains("신청기간")').next().text().split(' ~ ');
+        const applicationStartDate = new Date(start);
+        const applicationEndDate = new Date(end);
+        const bodyText = childPage('.bbs_content').text().trim();
 
-        const business = new Business(id, childPage);
-        businessList.push(business);
+        const item = new Business(id, title, department, bodyText, applicationStartDate, applicationEndDate);
+        businesses.push(item);
     }
 
-    return businessList;
+    return businesses;
 }
 
 async function getNotices() {
