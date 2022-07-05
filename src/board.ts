@@ -2,17 +2,10 @@ import assert from "node:assert";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import Business from "./business";
-import Notice from './notice';
+import { Business } from "./business";
+import { Notice } from './notice';
 
-async function loadDocument(url: string, params: any) {
-    const response = await axios.get(url, { params: params });
-    const document = cheerio.load(response.data);
-
-    return document;
-}
-
-async function getBusinesses(): Promise<Business[]> {
+export async function getBusinesses(): Promise<Business[]> {
     const parentPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/list.php", {
         "search_bzstat": "S" // 접수중 상태인 지원사업만 조회 
     });
@@ -44,16 +37,15 @@ async function getBusinesses(): Promise<Business[]> {
     return businesses;
 }
 
-async function getNotices() {
+export async function getNotices() {
     const parentPage = await loadDocument('https://sw.anu.ac.kr/module/bbs/list.php', { 'mid': '/community/notice' });
 
-    const noticeList: Notice[] = [];
+    const notices: Notice[] = [];
     const nodeList = parentPage('.bbs_B_td_tr');
 
     for (const node of nodeList) {
-        const onClickText = node.attribs['onclick'];
-
         // 예를 들어 "goView(0, 719, 719);" 에서 719를 추출함
+        const onClickText = node.attribs['onclick'];
         const splited = onClickText.split(',');
 
         const id = parseInt(splited[1]);
@@ -61,11 +53,23 @@ async function getNotices() {
 
         const childPage = await loadDocument("http://sw.anu.ac.kr/module/bbs/view.php", { 'rdno': id });
 
-        const notice = new Notice(id, childPage);
-        noticeList.push(notice);
+        const title = childPage('.bbs_title > .title').text().trim();
+        const author = childPage('#dpc_content > form > div.bbs_title > div.title_sub > dl > dd:nth-child(2)').text().trim();
+        const bodyText = childPage('#dpc_content > form > div.bbs_content').text().trim();
+
+        const createdAtText = childPage('#dpc_content > form > div.bbs_title > div.title_sub > dl > dd:nth-child(6)').text();
+        const createdAt = new Date(createdAtText);
+
+        const item = new Notice(id, title, bodyText, author, createdAt);
+        notices.push(item);
     }
 
-    return noticeList;
+    return notices;
 }
 
-export { getBusinesses, getNotices };
+async function loadDocument(url: string, params: any) {
+    const response = await axios.get(url, { params: params });
+    const document = cheerio.load(response.data);
+
+    return document;
+}
