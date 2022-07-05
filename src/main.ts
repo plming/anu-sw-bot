@@ -28,8 +28,8 @@ app.get('/run', async (_req, res) => {
         let found = await db.findNotice(notice._id);
 
         if (found === null) {
-            //slack.notifyBusinessAdded(business);
-            //db.insertBusiness(business);
+            slack.notifyNoticeAdded(notice);
+            db.insertNotice(notice);
         }
         else {
             logger.info(`이미 알림한 공지사항입니다. ${notice.title}`);

@@ -3,13 +3,16 @@ import axios, { AxiosRequestHeaders } from "axios";
 import "dotenv/config";
 import logger from "./logger";
 
-import Business from "./business";
+import { Business } from "./business";
+import { Notice } from "./notice";
 
 assert(process.env.SLACK_WEBHOOK_URL !== undefined);
 
-const MAX_BODY_PREVIEW_LENGTH = 200;
+const headers: AxiosRequestHeaders = {
+    'Content-type': 'application/json'
+}
 
-async function notifyBusinessAdded(business: Business) {
+export async function notifyBusinessAdded(business: Business) {
     const payload = {
         "text": business.title,
         "blocks": [
@@ -41,18 +44,54 @@ async function notifyBusinessAdded(business: Business) {
                 "type": "section",
                 "text": {
                     "type": "plain_text",
-                    "text": business.bodyText.substring(0, MAX_BODY_PREVIEW_LENGTH),
+                    "text": business.bodyText
                 }
             }
         ]
     }
 
-    const headers: AxiosRequestHeaders = {
-        'Content-type': 'application/json'
+    await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
+    logger.info(`슬랙방에 게시 완료 - 지원사업: ${business.title}`);
+}
+
+export async function notifyNoticeAdded(notice: Notice) {
+    const payload = {
+        "text": notice.title,
+        "blocks": [
+            {
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": notice.title
+                }
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": `*지원부서:* ${notice.author}`
+                },
+                "accessory": {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "확인하기"
+                    },
+                    "style": "primary",
+                    "action_id": "button-action",
+                    "url": notice.url
+                }
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "plain_text",
+                    "text": notice.bodyText
+                }
+            }
+        ]
     }
 
     await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
-    logger.info(`슬랙 봇에 신규 공지 - 지원사업: ${business.title}`);
+    logger.info(`슬랙방에 게시 완료 - 공지사항: ${notice.title}`);
 }
-
-export { notifyBusinessAdded };
