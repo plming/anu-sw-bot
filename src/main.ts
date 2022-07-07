@@ -13,15 +13,12 @@ app.listen(PORT, () => {
     logger.info(`서버가 ${PORT}번 포트에서 listen중입니다...`);
 });
 
-app.get('/run', (_req, res) => {
+app.get('/', (_req, res) => {
     Promise.all([handleBusiness(), handleNotice()])
         .then(() => {
             res.status(200).send('게시판 크롤링, 슬랙방 공지를 완료했습니다');
         }).catch(() => {
             res.status(500).send('작업이 실패했습니다');
-        })
-        .finally(() => {
-            logger.info("hello");
         })
 });
 
