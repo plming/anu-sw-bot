@@ -41,4 +41,10 @@ gcloud app deploy
 ## 📝 TODO
 - [ ] 슬랙 메시지 UI 개선
 - [ ] 기존 지원사업 내용 변경시 추가로 알리는 기능 구현
-- [x] ~~Cloud Build를 사용하여 지속적 배포(CD) 구현~~
+- [x] Github Actions를 사용하여 지속적 배포(CD) 구현
+  - 우선 Cloud Build에서 Github push를 추적하게 하였지만, 단순 repo 복제라서 secret을 전달하는게 불가능
+  - 따라서 Github Actions를 사용해 .env 파일 생성 및 주입함
+- [x] 비동기 처리 로직 개선
+  - web scraping 과정에서 네트워크 I/O에 시간이 많이 소요됨
+  - 비동기 처리 학습 후 async, await, promise를 사용해 리팩토링함
+  - 개발환경 기준 7s에서 <1s로 단축시킴

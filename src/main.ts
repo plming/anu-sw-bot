@@ -14,7 +14,7 @@ app.listen(PORT, () => {
 });
 
 app.get('/', (_req: Request, res: Response) => {
-    Promise.all([handleBusiness(), handleNotice()])
+    Promise.all([announceNewBusinesses(), announceNewNotices()])
         .then(() => {
             res.status(200).send('게시판 크롤링, 슬랙방 공지를 완료했습니다');
         }).catch((error: Error) => {
@@ -23,32 +23,46 @@ app.get('/', (_req: Request, res: Response) => {
         });
 });
 
-async function handleBusiness() {
-    const businesses = await board.getBusinesses();
-    for (const business of businesses) {
-        let found = await db.findBusiness(business._id);
+async function announceNewBusinesses(): Promise<void> {
+    const ids = await board.getCurrentBusinessIds();
 
-        if (found === null) {
-            await slack.notifyBusinessAdded(business);
-            await db.insertBusiness(business);
-        }
-        else {
-            logger.info(`이미 알림한 지원사업입니다. ${business.title}`);
-        }
+    const taskList: Promise<void>[] = [];
+    for (const id of ids) {
+        const task = announceBusiness(id);
+        taskList.push(task);
+    }
+
+    await Promise.all(taskList);
+}
+
+async function announceBusiness(id: number): Promise<void> {
+    const business = await board.getBusiness(id);
+    const found = await db.findBusiness(business._id);
+    if (found === null) {
+        Promise.all([slack.notifyBusinessAdded(business), db.insertBusiness(business)]);
+    } else {
+        logger.info(`이미 알림한 지원사업입니다. ${business.title}`);
     }
 }
 
-async function handleNotice() {
-    const notices = await board.getNotices();
-    for (const notice of notices) {
-        let found = await db.findNotice(notice._id);
+async function announceNewNotices(): Promise<void> {
+    const ids = await board.getCurrentNoticeIds();
 
-        if (found === null) {
-            await slack.notifyNoticeAdded(notice);
-            await db.insertNotice(notice);
-        }
-        else {
-            logger.info(`이미 알림한 공지사항입니다. ${notice.title}`);
-        }
+    const taskList: Promise<void>[] = [];
+    for (const id of ids) {
+        const task = announceNotice(id);
+        taskList.push(task);
     }
+
+    await Promise.all(taskList);
 }
+
+async function announceNotice(id: number): Promise<void> {
+    const notice = await board.getNotice(id);
+    const found = await db.findNotice(notice._id);
+    if (found === null) {
+        Promise.all([slack.notifyNoticeAdded(notice), db.insertNotice(notice)]);
+    } else {
+        logger.info(`이미 알림한 공지사항입니다. ${notice.title}`);
+    }
+} 
