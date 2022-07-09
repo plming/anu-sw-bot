@@ -14,13 +14,13 @@ const headers: AxiosRequestHeaders = {
 
 export async function notifyBusinessAdded(business: Business) {
     const payload = {
-        "text": business.title,
+        "text": `📄 ${business.title}`,
         "blocks": [
             {
                 "type": "header",
                 "text": {
                     "type": "plain_text",
-                    "text": business.title
+                    "text": `📄 ${business.title}`
                 }
             },
             {
@@ -56,13 +56,13 @@ export async function notifyBusinessAdded(business: Business) {
 
 export async function notifyNoticeAdded(notice: Notice) {
     const payload = {
-        "text": notice.title,
+        "text": `📢 ${notice.title}`,
         "blocks": [
             {
                 "type": "header",
                 "text": {
                     "type": "plain_text",
-                    "text": notice.title
+                    "text": `📢 ${notice.title}`
                 }
             },
             {
