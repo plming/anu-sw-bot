@@ -1,10 +1,10 @@
 import assert from "assert";
 import axios, { AxiosRequestHeaders } from "axios";
 import "dotenv/config";
-import logger from "./logger";
+import logger from "../util/Logger";
 
-import { Business } from "./business";
-import { Notice } from "./notice";
+import { Business } from "../entity/Business";
+import { Notice } from "../entity/Notice";
 
 assert(process.env.SLACK_WEBHOOK_URL !== undefined);
 
