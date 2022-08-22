@@ -1,10 +1,10 @@
 import assert from "assert";
 import axios, { AxiosRequestHeaders } from "axios";
 import "dotenv/config";
-import logger from "../util/Logger";
+import Logger from "../util/Logger";
 
-import { Business } from "../entity/Business";
-import { Notice } from "../entity/Notice";
+import Business from "../entity/Business";
+import Notice from "../entity/Notice";
 
 assert(process.env.SLACK_WEBHOOK_URL !== undefined);
 
@@ -51,7 +51,7 @@ export async function notifyBusinessAdded(business: Business) {
     }
 
     await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
-    logger.info(`슬랙방에 게시 완료 - 지원사업: ${business.title}`);
+    Logger.info(`슬랙방에 게시 완료 - 지원사업: ${business.title}`);
 }
 
 export async function notifyNoticeAdded(notice: Notice) {
@@ -93,5 +93,5 @@ export async function notifyNoticeAdded(notice: Notice) {
     }
 
     await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
-    logger.info(`슬랙방에 게시 완료 - 공지사항: ${notice.title}`);
+    Logger.info(`슬랙방에 게시 완료 - 공지사항: ${notice.title}`);
 }

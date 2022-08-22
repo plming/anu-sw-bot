@@ -1,28 +1,15 @@
-import assert from "node:assert";
-
-export interface IBusiness {
-    readonly _id: number;
-    readonly title: string;
-    readonly department: string;
-    readonly bodyText: string;
-    readonly applicationStartDate: Date;
-    readonly applicationEndDate: Date;
-}
-
-export class Business implements IBusiness {
-    get url(): string {
+export default class Business {
+    public get url(): string {
         return `https://sw.anu.ac.kr/main/sw/jw/main/view.php?mid=/jw/jw_list_all&bznum=${this._id}`;
     }
 
-    constructor(
-        readonly _id: number,
-        readonly title: string,
-        readonly department: string,
-        readonly bodyText: string,
-        readonly applicationStartDate: Date,
-        readonly applicationEndDate: Date
+    public constructor(
+        public readonly _id: number,
+        public readonly title: string,
+        public readonly department: string,
+        public readonly bodyText: string,
+        public readonly applicationStartDate: Date,
+        public readonly applicationEndDate: Date,
     ) {
-        assert(!isNaN(applicationStartDate.getTime()));
-        assert(!isNaN(applicationEndDate.getTime()));
     }
 }

@@ -1,25 +1,14 @@
-import assert from "node:assert";
-
-export interface INotice {
-    readonly _id: number;
-    readonly title: string;
-    readonly bodyText: string;
-    readonly author: string;
-    readonly createdAt: Date;
-}
-
-export class Notice {
-    get url(): string {
+export default class Notice {
+    public get url(): string {
         return `http://sw.anu.ac.kr/module/bbs/view.php?mid=/community/notice&rdno=${this._id}`;
     }
 
-    constructor(
-        readonly _id: number,
-        readonly title: string,
-        readonly bodyText: string,
-        readonly author: string,
-        readonly createdAt: Date
+    public constructor(
+        public readonly _id: number,
+        public readonly title: string,
+        public readonly bodyText: string,
+        public readonly author: string,
+        public readonly createdAt: Date
     ) {
-        assert(!isNaN(createdAt.getTime()));
     }
 }

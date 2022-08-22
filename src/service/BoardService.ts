@@ -2,8 +2,8 @@ import assert from "node:assert";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import { Business } from "../entity/Business";
-import { Notice } from '../entity/Notice';
+import Business from "../entity/Business";
+import Notice from '../entity/Notice';
 
 export async function getCurrentBusinessIds(): Promise<number[]> {
     const parentPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/list.php", {
@@ -34,6 +34,9 @@ export async function getBusiness(id: number): Promise<Business> {
     const [start, end] = childPage('.th1:contains("신청기간")').next().text().split(' ~ ');
     const applicationStartDate = new Date(start);
     const applicationEndDate = new Date(end);
+
+    assert(!isNaN(applicationStartDate.getTime()));
+    assert(!isNaN(applicationEndDate.getTime()));
 
     return new Business(id, title, department, bodyText, applicationStartDate, applicationEndDate);
 }
@@ -66,6 +69,7 @@ export async function getNotice(id: number) {
     const bodyText = childPage('#dpc_content > form > div.bbs_content').text().trim();
     const createdAtText = childPage('#dpc_content > form > div.bbs_title > div.title_sub > dl > dd:nth-child(6)').text();
     const createdAt = new Date(createdAtText);
+    assert(!isNaN(createdAt.getTime()));
 
     return new Notice(id, title, bodyText, author, createdAt);
 }
