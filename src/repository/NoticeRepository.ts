@@ -4,9 +4,9 @@ import "dotenv/config";
 
 import Notice from "../entity/Notice";
 
-assert(process.env.MONGODB_URI !== undefined);
+assert(process.env.CUSTOMCONNSTR_ANU_SW_BOT !== undefined);
 
-const client = new MongoClient(process.env.MONGODB_URI);
+const client = new MongoClient(process.env.CUSTOMCONNSTR_ANU_SW_BOT);
 const database = client.db('AnuSw');
 const notices = database.collection<Notice>('notice');
 

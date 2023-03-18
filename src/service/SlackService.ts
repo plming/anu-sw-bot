@@ -1,12 +1,15 @@
-import assert from "assert";
 import axios, { AxiosRequestHeaders } from "axios";
-import "dotenv/config";
 import Logger from "../util/Logger";
 
 import Business from "../entity/Business";
 import Notice from "../entity/Notice";
 
-assert(process.env.SLACK_WEBHOOK_URL !== undefined);
+function init() {
+    if (process.env.SLACK_WEBHOOK_URL === undefined) {
+        throw new Error("슬랙 웹훅 URL이 설정되어 있지 않습니다.");
+    }
+}
+init();
 
 const headers: AxiosRequestHeaders = {
     'Content-type': 'application/json'

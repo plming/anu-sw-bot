@@ -4,9 +4,7 @@ import "dotenv/config";
 
 import Business from "../entity/Business";
 
-assert(process.env.MONGODB_URI !== undefined);
-
-const client = new MongoClient(process.env.MONGODB_URI);
+const client = new MongoClient(process.env.CUSTOMCONNSTR_ANU_SW_BOT);
 const database = client.db('AnuSw');
 const businesses = database.collection<Business>('business');
 
