@@ -32,8 +32,7 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
     });
 
     if (response.data.ok === false) {
-        Logger.error(response.data.error);
-        res.status(400).send("슬랙으로부터 Access Token을 받아오는데 실패했습니다");
+        res.status(400).send(JSON.stringify(response.data));
         return;
     }
 
