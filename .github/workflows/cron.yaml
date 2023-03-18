@@ -1,0 +1,11 @@
+name: cron
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl https://anuswbot.azurewebsites.net
