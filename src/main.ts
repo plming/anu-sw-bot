@@ -24,21 +24,24 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
         return;
     }
 
-    const buf = JSON.stringify(req.query);
-
-    const response = await axios.post("https://slack.com/api/oauth.v2.access", {
+    const data = {
         client_id: process.env.SLACK_CLIENT_ID,
         client_secret: process.env.SLACK_CLIENT_SECRET,
         code: req.query.code,
         redirect_uri: "https://anuswbot.azurewebsites.net/slack/oauth",
-    }, {
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-    });
+    };
+
+    const response = await axios.post("https://slack.com/api/oauth.v2.access",
+        data,
+        {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
 
     if (response.data.ok === false) {
-        res.status(400).send(buf + req.query.code + JSON.stringify(response.data));
+        Logger.error(response.data);
+        res.status(500).send("슬랙 API 요청에 실패했습니다");
         return;
     }
 
