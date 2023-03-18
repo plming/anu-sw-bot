@@ -1,8 +1,8 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import Logger from "../util/Logger";
 
-import { Business, getBusinessUrl } from "../entity/Business";
-import { Notice, getNoticeUrl } from "../entity/Notice";
+import { Business, getBusinessUrl } from "../entity/business";
+import { Notice, getNoticeUrl } from "../entity/notice";
 
 function init() {
     if (process.env.SLACK_WEBHOOK_URL === undefined) {

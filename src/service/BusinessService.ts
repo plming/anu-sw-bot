@@ -1,7 +1,7 @@
 import * as BoardService from './BoardService';
 import Logger from '../util/Logger';
 import * as SlackService from "./SlackService";
-import * as BusinessRepository from "../repository/BusinessRepository";
+import { businessRepository } from '../database';
 
 export async function announceNewBusinesses(): Promise<void> {
     const ids = await BoardService.getCurrentBusinessIds();
@@ -17,10 +17,14 @@ export async function announceNewBusinesses(): Promise<void> {
 
 async function announceBusiness(id: number): Promise<void> {
     const business = await BoardService.getBusiness(id);
-    const found = await BusinessRepository.findBusiness(business._id);
+    const found = await businessRepository.findOne({ _id: business._id });
+
     if (found === null) {
-        const tasks = [SlackService.notifyBusinessAdded(business), BusinessRepository.insertBusiness(business)];
-        Promise.all(tasks);
+        const tasks = [
+            SlackService.notifyBusinessAdded(business),
+            businessRepository.insertOne(business)
+        ];
+        await Promise.all(tasks);
     } else {
         Logger.info(`이미 알림한 지원사업입니다. ${business.title}`);
     }

@@ -2,8 +2,8 @@ import assert from "node:assert";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import { Business } from "../entity/Business";
-import { Notice } from '../entity/Notice';
+import { Business } from "../entity/business";
+import { Notice } from '../entity/notice';
 
 export async function getCurrentBusinessIds(): Promise<number[]> {
     const parentPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/list.php", {
