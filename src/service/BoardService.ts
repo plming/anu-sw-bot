@@ -2,8 +2,8 @@ import assert from "node:assert";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import Business from "../entity/Business";
-import Notice from '../entity/Notice';
+import { Business } from "../entity/Business";
+import { Notice } from '../entity/Notice';
 
 export async function getCurrentBusinessIds(): Promise<number[]> {
     const parentPage = await loadDocument("https://sw.anu.ac.kr/main/sw/jw/main/list.php", {
@@ -38,7 +38,14 @@ export async function getBusiness(id: number): Promise<Business> {
     assert(!isNaN(applicationStartDate.getTime()));
     assert(!isNaN(applicationEndDate.getTime()));
 
-    return new Business(id, title, department, bodyText, applicationStartDate, applicationEndDate);
+    return {
+        _id: id,
+        title: title,
+        department: department,
+        bodyText: bodyText,
+        applicationStartDate: applicationStartDate,
+        applicationEndDate: applicationEndDate
+    }
 }
 
 export async function getCurrentNoticeIds(): Promise<number[]> {
@@ -61,7 +68,7 @@ export async function getCurrentNoticeIds(): Promise<number[]> {
     return ids;
 }
 
-export async function getNotice(id: number) {
+export async function getNotice(id: number): Promise<Notice> {
     const childPage = await loadDocument("http://sw.anu.ac.kr/module/bbs/view.php", { 'rdno': id });
 
     const title = childPage('.bbs_title > .title').text().trim();
@@ -71,7 +78,13 @@ export async function getNotice(id: number) {
     const createdAt = new Date(createdAtText);
     assert(!isNaN(createdAt.getTime()));
 
-    return new Notice(id, title, bodyText, author, createdAt);
+    return {
+        _id: id,
+        title: title,
+        bodyText: bodyText,
+        author: author,
+        createdAt: createdAt
+    }
 }
 
 async function loadDocument(url: string, params: any) {

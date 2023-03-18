@@ -1,8 +1,8 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import Logger from "../util/Logger";
 
-import Business from "../entity/Business";
-import Notice from "../entity/Notice";
+import { Business, getBusinessUrl } from "../entity/Business";
+import { Notice, getNoticeUrl } from "../entity/Notice";
 
 function init() {
     if (process.env.SLACK_WEBHOOK_URL === undefined) {
@@ -40,7 +40,7 @@ export async function notifyBusinessAdded(business: Business) {
                     },
                     "style": "primary",
                     "action_id": "button-action",
-                    "url": business.url
+                    "url": getBusinessUrl(business._id)
                 }
             },
             {
@@ -82,7 +82,7 @@ export async function notifyNoticeAdded(notice: Notice) {
                     },
                     "style": "primary",
                     "action_id": "button-action",
-                    "url": notice.url
+                    "url": getNoticeUrl(notice._id)
                 }
             },
             {
