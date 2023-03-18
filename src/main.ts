@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 
 import { announceNewBusinesses } from './service/BusinessService';
 import { announceNewNotices } from './service/NoticeService';
-import { userRepository } from './database';
+import { webhookRepository } from './database';
 
 const app = express();
 
@@ -46,16 +46,17 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
         return;
     }
 
-    const userId = response.data.authed_user.id;
-    const accessToken = response.data.authed_user.access_token;
     console.log(JSON.stringify(response.data));
 
     try {
-        await userRepository.insertOne({
-            _id: userId,
-            access_token: accessToken
+        await webhookRepository.insertOne({
+            _id: response.data.incoming_webhook.channel_id,
+            channel: response.data.incoming_webhook.channel,
+            url: response.data.incoming_webhook.url,
+            configuration_url: response.data.incoming_webhook.configuration_url
         });
-    } catch (error) {
+    }
+    catch (error) {
         console.error(error);
         res.status(500).send("DB 저장에 실패했습니다");
         return;
