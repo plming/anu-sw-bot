@@ -1,5 +1,4 @@
 import * as BoardService from './BoardService';
-import Logger from '../util/Logger';
 import * as SlackService from "./SlackService";
 import { businessRepository } from '../database';
 
@@ -26,6 +25,6 @@ async function announceBusiness(id: number): Promise<void> {
         ];
         await Promise.all(tasks);
     } else {
-        Logger.info(`이미 알림한 지원사업입니다. ${business.title}`);
+        console.log(`이미 알림한 지원사업입니다. ${business.title}`);
     }
 }

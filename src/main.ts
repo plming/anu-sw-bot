@@ -1,7 +1,6 @@
 import axios from 'axios';
 import express, { Request, Response } from 'express';
 
-import Logger from './util/Logger';
 import { announceNewBusinesses } from './service/BusinessService';
 import { announceNewNotices } from './service/NoticeService';
 import { userRepository } from './database';
@@ -13,7 +12,7 @@ app.get('/', (_req: Request, res: Response) => {
         .then(() => {
             res.status(200).send('게시판 크롤링, 슬랙방 공지를 완료했습니다');
         }).catch((error: Error) => {
-            Logger.error(error.stack);
+            console.error(error.stack);
             res.status(500).send('작업이 실패했습니다');
         });
 });
@@ -31,6 +30,8 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
         redirect_uri: "https://anuswbot.azurewebsites.net/slack/oauth",
     };
 
+    console.log(JSON.stringify(data));
+
     const response = await axios.post("https://slack.com/api/oauth.v2.access",
         data,
         {
@@ -40,7 +41,7 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
         });
 
     if (response.data.ok === false) {
-        Logger.error(response.data);
+        console.error(JSON.stringify(response.data));
         res.status(500).send("슬랙 API 요청에 실패했습니다");
         return;
     }
@@ -54,7 +55,7 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
             access_token: accessToken
         });
     } catch (error) {
-        Logger.error(error);
+        console.error(error);
         res.status(500).send("DB 저장에 실패했습니다");
         return;
     }
@@ -63,5 +64,5 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
 });
 
 app.listen(process.env.PORT, () => {
-    Logger.info(`서버가 ${process.env.PORT}번 포트에서 listen중입니다...`);
+    console.log(`서버가 ${process.env.PORT}번 포트에서 listen중입니다...`);
 });

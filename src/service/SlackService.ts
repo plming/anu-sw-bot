@@ -1,5 +1,4 @@
 import axios, { AxiosRequestHeaders } from "axios";
-import Logger from "../util/Logger";
 
 import { Business, getBusinessUrl } from "../entity/business";
 import { Notice, getNoticeUrl } from "../entity/notice";
@@ -11,8 +10,8 @@ function init() {
 }
 init();
 
-const headers: AxiosRequestHeaders = {
-    'Content-type': 'application/json'
+const headers = {
+    "Content-Type": "application/json"
 }
 
 export async function notifyBusinessAdded(business: Business) {
@@ -53,8 +52,8 @@ export async function notifyBusinessAdded(business: Business) {
         ]
     }
 
-    await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
-    Logger.info(`슬랙방에 게시 완료 - 지원사업: ${business.title}`);
+    await axios.post(process.env.SLACK_WEBHOOK_URL, payload, { headers: headers });
+    console.log(`슬랙방에 게시 완료 - 지원사업: ${business.title}`);
 }
 
 export async function notifyNoticeAdded(notice: Notice) {
@@ -95,6 +94,6 @@ export async function notifyNoticeAdded(notice: Notice) {
         ]
     }
 
-    await axios.post(process.env.SLACK_WEBHOOK_URL, payload, headers);
-    Logger.info(`슬랙방에 게시 완료 - 공지사항: ${notice.title}`);
+    await axios.post(process.env.SLACK_WEBHOOK_URL, payload, { headers: headers });
+    console.log(`슬랙방에 게시 완료 - 공지사항: ${notice.title}`);
 }

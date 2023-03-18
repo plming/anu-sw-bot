@@ -1,6 +1,5 @@
 import * as BoardService from './BoardService';
 import * as SlackService from "./SlackService";
-import Logger from '../util/Logger';
 import { noticeRepository } from '../database';
 
 export async function announceNewNotices(): Promise<void> {
@@ -26,6 +25,6 @@ async function announceNotice(id: number): Promise<void> {
         ];
         await Promise.all(tasks);
     } else {
-        Logger.info(`이미 알림한 공지사항입니다. ${notice.title}`);
+        console.log(`이미 알림한 공지사항입니다. ${notice.title}`);
     }
 }
