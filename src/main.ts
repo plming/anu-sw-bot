@@ -48,6 +48,7 @@ app.get("/slack/oauth", async (req: Request, res: Response) => {
 
     const userId = response.data.authed_user.id;
     const accessToken = response.data.authed_user.access_token;
+    console.log(JSON.stringify(response.data));
 
     try {
         await userRepository.insertOne({
