@@ -1,17 +1,24 @@
-import axios, { AxiosRequestHeaders } from "axios";
+import axios from "axios";
 
 import { Business, getBusinessUrl } from "../entity/business";
 import { Notice, getNoticeUrl } from "../entity/notice";
+import { webhookRepository } from "../database";
 
-function init() {
+(function () {
     if (process.env.SLACK_WEBHOOK_URL === undefined) {
         throw new Error("슬랙 웹훅 URL이 설정되어 있지 않습니다.");
     }
-}
-init();
+})();
 
-const headers = {
-    "Content-Type": "application/json"
+async function broadcast(payload: object) {
+    const headers = {
+        "Content-Type": "application/json"
+    }
+
+    const webhooks = await webhookRepository.find({}, { projection: { url: 1, _id: 0 } }).toArray();
+    const tasks = webhooks.map(webhook => axios.post(webhook.url, payload, { headers: headers }));
+
+    await Promise.all(tasks);
 }
 
 export async function notifyBusinessAdded(business: Business) {
@@ -52,7 +59,7 @@ export async function notifyBusinessAdded(business: Business) {
         ]
     }
 
-    await axios.post(process.env.SLACK_WEBHOOK_URL, payload, { headers: headers });
+    await broadcast(payload);
     console.log(`슬랙방에 게시 완료 - 지원사업: ${business.title}`);
 }
 
@@ -94,6 +101,6 @@ export async function notifyNoticeAdded(notice: Notice) {
         ]
     }
 
-    await axios.post(process.env.SLACK_WEBHOOK_URL, payload, { headers: headers });
+    await broadcast(payload);
     console.log(`슬랙방에 게시 완료 - 공지사항: ${notice.title}`);
 }

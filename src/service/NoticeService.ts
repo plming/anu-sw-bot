@@ -1,5 +1,5 @@
 import * as BoardService from './BoardService';
-import * as SlackService from "./SlackService";
+import * as slack from "./slack";
 import { noticeRepository } from '../database';
 
 export async function announceNewNotices(): Promise<void> {
@@ -20,7 +20,7 @@ async function announceNotice(id: number): Promise<void> {
 
     if (found === null) {
         const tasks = [
-            SlackService.notifyNoticeAdded(notice),
+            slack.notifyNoticeAdded(notice),
             noticeRepository.insertOne(notice)
         ];
         await Promise.all(tasks);

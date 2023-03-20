@@ -1,5 +1,5 @@
 import * as BoardService from './BoardService';
-import * as SlackService from "./SlackService";
+import * as slack from "./slack";
 import { businessRepository } from '../database';
 
 export async function announceNewBusinesses(): Promise<void> {
@@ -20,7 +20,7 @@ async function announceBusiness(id: number): Promise<void> {
 
     if (found === null) {
         const tasks = [
-            SlackService.notifyBusinessAdded(business),
+            slack.notifyBusinessAdded(business),
             businessRepository.insertOne(business)
         ];
         await Promise.all(tasks);
