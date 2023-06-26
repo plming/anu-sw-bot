@@ -4,12 +4,6 @@ import { Business, getBusinessUrl } from "../entity/business";
 import { Notice, getNoticeUrl } from "../entity/notice";
 import { webhookRepository } from "../database";
 
-(function () {
-    if (process.env.SLACK_WEBHOOK_URL === undefined) {
-        throw new Error("슬랙 웹훅 URL이 설정되어 있지 않습니다.");
-    }
-})();
-
 async function broadcast(payload: object) {
     const headers = {
         "Content-Type": "application/json"
