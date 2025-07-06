@@ -4,7 +4,8 @@
 
 [안동대학교 SW융합교육원](https://sw.anu.ac.kr) 게시판에 새로운 지원사업이나 공지사항이 게시될 경우 알려주는 슬랙 봇입니다.
 
-[안동대학교 SW중심대학 사업 종료](https://www.swuniv.kr/organization/?q=YToyOntzOjEyOiJrZXl3b3JkX3R5cGUiO3M6MzoiYWxsIjtzOjc6ImtleXdvcmQiO3M6Njoi7JWI64%2BZIjt9&bmode=view&idx=6398912&t=board)로 더 이상 게시판에 지원사업이나 공지사항이 게시되지 않기 때문에, 본 서비스는 더 이상 운영되지 않습니다.
+> [!Note]
+> [안동대학교 SW중심대학 사업 종료](https://www.swuniv.kr/organization/?q=YToyOntzOjEyOiJrZXl3b3JkX3R5cGUiO3M6MzoiYWxsIjtzOjc6ImtleXdvcmQiO3M6Njoi7JWI64%2BZIjt9&bmode=view&idx=6398912&t=board)로 더 이상 게시판에 지원사업이나 공지사항이 게시되지 않기 때문에, 본 서비스는 더 이상 운영되지 않습니다.
 
 ## 🛠 사용 도구
 
